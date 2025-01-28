@@ -1,0 +1,20 @@
+{
+  "name": "resemblemoji",
+  "version": "1.0.0",
+  "description": "Use the camera or upload an image, and see the top five emojis the image most closely resembles",
+  "homepage": "https://github.com/slopefields/ResembleMoji#readme",
+  "bugs": {
+    "url": "https://github.com/slopefields/ResembleMoji/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slopefields/ResembleMoji.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
