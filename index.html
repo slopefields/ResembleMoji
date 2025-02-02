@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ResembleMoji</title>
 </head>
+
 <body>
     <h1>ResembleMoji</h1>
-    <label for="upload">Choose a photo to upload</label>
+
+    <!--Image upload-->
+    <label for="upload">Choose a photo to upload</label><br>
     <input type="file" id="imageUpload" name="upload" accept="image/*">
+
+    <!--Canvas-->
+    <canvas id="canvas"></canvas>
+
+    <!--Submit and predict button-->
+    <button id="predictButton">Predict</button>
+
+    <!--Section for prediction rankings-->
+    <div id="predictions"></div>
+
+    <!--Script-->
     <script src="script.js"></script>
 </body>
+
 </html>
