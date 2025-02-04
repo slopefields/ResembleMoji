@@ -1,3 +1,5 @@
+const imageUpload = document.getElementById('imageUpload');
+
 const predictButton = document.getElementById('predictButton');
 
 predictButton.addEventListener('click', function()
