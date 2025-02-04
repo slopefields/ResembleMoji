@@ -3,7 +3,13 @@ const imageDisplay = document.getElementById('imageDisplay');
 const predictButton = document.getElementById('predictButton');
 
 const reader = new FileReader();
-    
+
+async function loadModel()
+{
+    const model = await mobilenet.load();
+    console.log("MobileNet model successfully loaded");
+};
+
 imageUpload.addEventListener('change', function()
 {
     // Get first file (only one image is allowed)
@@ -24,5 +30,12 @@ predictButton.addEventListener('click', function()
 {
     // If there are no files (length == 0)
     if (!imageUpload.files.length)
+    {
         alert('Attach an image first!');
+    }
 });
+
+window.onload = function()
+{
+    loadModel();
+};
