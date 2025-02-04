@@ -18,6 +18,6 @@ reader.addEventListener("load", () =>
 
 predictButton.addEventListener('click', function()
 {
-    if (imageUpload.value == '')
+    if (!imageUpload.files.length)
         alert('Attach an image first!');
 });
