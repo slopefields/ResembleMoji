@@ -6,7 +6,7 @@ const reader = new FileReader();
 
 let model;
 
-async function loadModel()
+async function loadMobileNetModel()
 {
     model = await mobilenet.load();
     console.log("MobileNet model successfully loaded");
