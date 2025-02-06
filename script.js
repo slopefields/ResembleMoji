@@ -60,4 +60,7 @@ predictButton.addEventListener('click', async function()
     
 });
 
-document.addEventListener("DOMContentLoaded", loadModel);
+document.addEventListener("DOMContentLoaded", () =>
+{
+    loadMobileNetModel();
+});
