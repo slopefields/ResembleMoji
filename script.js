@@ -17,7 +17,7 @@ function displayPredictions(predictions)
     const predictionsDiv = document.getElementById('predictions');
     predictionsDiv.innerHTML = "";
 
-    predictions.slice(0,5).forEach(prediction => {
+    predictions.forEach(prediction => {
         const temp = document.createElement('p');
         temp.textContent = `${prediction.className} : ${(prediction.probability * 100).toFixed(2)}%`;
         predictionsDiv.appendChild(temp);
@@ -54,7 +54,7 @@ predictButton.addEventListener('click', async function()
     else
     {
         const predictions = await model.classify(imageDisplay);
-
+        console.log(predictions);
         displayPredictions(predictions);
     }
     
