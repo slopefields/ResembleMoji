@@ -11,6 +11,7 @@ async function loadFaceMeshModel()
 {
     faceMesh = await new faceMeshModule.FaceMesh(
         {
+            maxNumFaces : 1,
             refineLandmarks : true,
         }
     );
