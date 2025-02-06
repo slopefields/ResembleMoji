@@ -4,9 +4,11 @@ const predictButton = document.getElementById('predictButton');
 
 const reader = new FileReader();
 
+let model;
+
 async function loadModel()
 {
-    const model = await mobilenet.load();
+    model = await mobilenet.load();
     console.log("MobileNet model successfully loaded");
 };
 
