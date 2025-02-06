@@ -12,6 +12,18 @@ async function loadModel()
     console.log("MobileNet model successfully loaded");
 };
 
+function displayPredictions(predictions)
+{
+    const predictionsDiv = document.getElementById('predictions');
+    predictionsDiv.innerHTML = "";
+
+    predictions.slice(0,5).forEach(prediction => {
+        const temp = document.createElement('p');
+        temp.textContent = `${prediction.className} : ${(prediction.probability * 100).toFixed(2)}%`;
+        predictionsDiv.appendChild(temp);
+    });
+}
+
 imageUpload.addEventListener('change', function()
 {
     // Get first file (only one image is allowed)
@@ -28,13 +40,24 @@ reader.addEventListener("load", () =>
     imageDisplay.src = reader.result;
 });
 
-predictButton.addEventListener('click', function()
+predictButton.addEventListener('click', async function()
 {
     // If there are no files (length == 0)
     if (!imageUpload.files.length)
     {
         alert('Attach an image first!');
     }
+    else if (!model)
+    {
+        alert('Model still loading. Try again later.');
+    }
+    else
+    {
+        const predictions = await model.classify(imageDisplay);
+
+        displayPredictions(predictions);
+    }
+    
 });
 
 window.onload = function()
