@@ -4,7 +4,18 @@ const predictButton = document.getElementById('predictButton');
 
 const reader = new FileReader();
 
+let faceMesh;
 let model;
+
+async function loadFaceMeshModel()
+{
+    faceMesh = await new faceMeshModule.FaceMesh(
+        {
+            refineLandmarks : true,
+        }
+    );
+    console.log("MediaPipe Face Mesh model successfully loaded");
+}
 
 async function loadMobileNetModel()
 {
@@ -22,6 +33,13 @@ function displayPredictions(predictions)
         temp.textContent = `${prediction.className} : ${(prediction.probability * 100).toFixed(2)}%`;
         predictionsDiv.appendChild(temp);
     });
+}
+
+async function predictUsingMobileNet()
+{
+    const predictions = await model.classify(imageDisplay);
+        console.log(predictions);
+        displayPredictions(predictions);
 }
 
 imageUpload.addEventListener('change', function()
@@ -53,9 +71,7 @@ predictButton.addEventListener('click', async function()
     }
     else
     {
-        const predictions = await model.classify(imageDisplay);
-        console.log(predictions);
-        displayPredictions(predictions);
+        predictUsingMobileNet();
     }
     
 });
