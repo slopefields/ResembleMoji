@@ -60,7 +60,4 @@ predictButton.addEventListener('click', async function()
     
 });
 
-window.onload = function()
-{
-    loadModel();
-};
+document.addEventListener("DOMContentLoaded", loadModel);
