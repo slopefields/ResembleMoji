@@ -4,10 +4,8 @@ const predictButton = document.getElementById('predictButton');
 
 const reader = new FileReader();
 
-let faceMesh;
 let mobileNetModel;
-
-
+let faceMeshModel;
 
 async function loadFaceMeshModel()
 {
