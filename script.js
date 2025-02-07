@@ -5,7 +5,9 @@ const predictButton = document.getElementById('predictButton');
 const reader = new FileReader();
 
 let faceMesh;
-let model;
+let mobileNetModel;
+
+
 
 async function loadFaceMeshModel()
 {
@@ -20,7 +22,7 @@ async function loadFaceMeshModel()
 
 async function loadMobileNetModel()
 {
-    model = await mobilenet.load();
+    mobileNetModel = await mobilenet.load();
     console.log("MobileNet model successfully loaded");
 };
 
@@ -38,7 +40,7 @@ function displayPredictions(predictions)
 
 async function predictUsingMobileNet()
 {
-    const predictions = await model.classify(imageDisplay);
+    const predictions = await mobileNetModel.classify(imageDisplay);
         console.log(predictions);
         displayPredictions(predictions);
 }
@@ -66,9 +68,9 @@ predictButton.addEventListener('click', async function()
     {
         alert('Attach an image first!');
     }
-    else if (!model)
+    else if (!mobileNetModel)
     {
-        alert('Model still loading. Try again later.');
+        alert('MobileNet model still loading. Try again later.');
     }
     else
     {
