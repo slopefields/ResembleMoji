@@ -15,7 +15,7 @@
         }});
 
         faceDetectionModel.setOptions({
-            modelSelection: 0,
+            model: 0,
             minDetectionConfidence: 0.5,
         });
         
