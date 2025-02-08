@@ -6,15 +6,34 @@ const reader = new FileReader();
 
 let mobileNetModel;
 let faceMeshModel;
+let faceDetectionModel;
+
+async function loadFaceDetectionModel()
+{
+    faceDetectionModel = new FaceDetection({locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.0/${file}`;
+      }});
+
+      faceDetectionModel.setOptions({
+        modelSelection: 0,
+        minDetectionConfidence: 0.5,
+      });
+    
+    console.log("MediaPipe Face Detection model successfully loaded");
+}
 
 async function loadFaceMeshModel()
 {
-    faceMesh = await new faceMeshModule.FaceMesh(
-        {
-            maxNumFaces : 1,
-            refineLandmarks : true,
-        }
-    );
+    faceMeshModel = new FaceMesh({locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+      }});
+
+      faceMeshModel.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: false,
+        minDetectionConfidence: 0.5,
+      });
+      
     console.log("MediaPipe Face Mesh model successfully loaded");
 }
 
@@ -79,5 +98,7 @@ predictButton.addEventListener('click', async function()
 
 document.addEventListener("DOMContentLoaded", () =>
 {
+    loadFaceDetectionModel();
+    loadFaceMeshModel();
     loadMobileNetModel();
 });
