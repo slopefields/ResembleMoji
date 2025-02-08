@@ -8,7 +8,7 @@ let mobileNetModel;
 let faceMeshModel;
 let faceDetectionModel;
 
-async function loadFaceDetectionModel()
+function loadFaceDetectionModel()
 {
     faceDetectionModel = new FaceDetection({locateFile: (file) => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.0/${file}`;
@@ -22,7 +22,7 @@ async function loadFaceDetectionModel()
     console.log("MediaPipe Face Detection model successfully loaded");
 }
 
-async function loadFaceMeshModel()
+function loadFaceMeshModel()
 {
     faceMeshModel = new FaceMesh({locateFile: (file) => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
