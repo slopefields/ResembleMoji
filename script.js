@@ -1,3 +1,8 @@
+import {
+    FaceDetector,
+    FilesetResolver
+  } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
+    
     const imageUpload = document.getElementById('imageUpload');
     const imageDisplay = document.getElementById('imageDisplay');
     const predictButton = document.getElementById('predictButton');
@@ -8,33 +13,22 @@
     let faceMeshModel;
     let faceDetectionModel;
 
-    function loadFaceDetectionModel()
+    async function loadFaceDetectionModel()
     {
-        faceDetectionModel = new FaceDetection({locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@latest/${file}`;
-        }});
-
-        faceDetectionModel.setOptions({
-            model: 0,
-            minDetectionConfidence: 0.5,
-        });
-        
-        console.log("MediaPipe Face Detection model successfully loaded");
+        const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
+        faceDetectionModel = await FaceDetector.createFromOptions(
+            vision,
+            {
+              baseOptions: {
+                modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite`
+              },
+              runningMode: "IMAGE"
+            });
     }
 
-    function loadFaceMeshModel()
+    async function loadFaceMeshModel()
     {
-        faceMeshModel = new FaceMesh({locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@latest/${file}`;
-        }});
-
-        faceMeshModel.setOptions({
-            maxNumFaces: 1,
-            refineLandmarks: false,
-            minDetectionConfidence: 0.5,
-        });
-        
-        console.log("MediaPipe Face Mesh model successfully loaded");
+       
     }
 
     async function loadMobileNetModel()
@@ -53,6 +47,24 @@
             temp.textContent = `${prediction.className} : ${(prediction.probability * 100).toFixed(2)}%`;
             predictionsDiv.appendChild(temp);
         });
+    }
+
+    function predictUsingFaceDetection()
+    {
+        let detectionResults = faceDetectionModel.detect(imageDisplay);
+        
+        if (detectionResults.detections.length > 0)
+        {
+            let faceDetectionScore = detectionResults.detections[0].categories[0].score;
+            console.log("Face detection score: ", faceDetectionScore);
+            return faceDetectionScore;
+        }
+        return 0;
+    }
+
+    function predictUsingFaceMesh()
+    {
+
     }
 
     async function predictUsingMobileNet()
@@ -84,16 +96,20 @@
         if (!imageUpload.files.length)
         {
             alert('Attach an image first!');
+            return;
         }
         else if (!mobileNetModel)
         {
             alert('MobileNet model still loading. Try again later.');
+            return;
+        }
+
+        if (predictUsingFaceDetection() > 0.7) 
+        {
+            console.log("Face detected with over 0.7 confidence");
         }
         else
-        {
             predictUsingMobileNet();
-        }
-        
     });
 
     document.addEventListener("DOMContentLoaded", () =>
