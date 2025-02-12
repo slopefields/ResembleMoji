@@ -1,5 +1,7 @@
-import vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
-const { FaceLandmarker, FilesetResolver } = vision;
+import {
+    FaceDetector,
+    FilesetResolver
+  } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
     
     const imageUpload = document.getElementById('imageUpload');
     const imageDisplay = document.getElementById('imageDisplay');
@@ -14,12 +16,13 @@ const { FaceLandmarker, FilesetResolver } = vision;
     async function loadFaceDetectionModel()
     {
         const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
-        faceDetectionModel = await FaceLandmarker.createFromOptions(
+        faceDetectionModel = await FaceDetector.createFromOptions(
             vision,
             {
               baseOptions: {
-                modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`
+                modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite`
               },
+              runningMode: "IMAGE"
             });
     }
 
@@ -61,14 +64,14 @@ const { FaceLandmarker, FilesetResolver } = vision;
 
     function predictUsingFaceMesh()
     {
-        
+
     }
 
     async function predictUsingMobileNet()
     {
         const predictions = await mobileNetModel.classify(imageDisplay);
-        console.log(predictions);
-        displayPredictions(predictions);
+            console.log(predictions);
+            displayPredictions(predictions);
     }
 
     imageUpload.addEventListener('change', function()
