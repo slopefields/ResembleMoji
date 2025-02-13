@@ -61,11 +61,11 @@ import {
 
     function predictUsingFaceDetection()
     {
-        let detectionResults = faceDetectionModel.detect(imageDisplay);
+        const detectionResults = faceDetectionModel.detect(imageDisplay);
         
         if (detectionResults.detections.length > 0)
         {
-            let faceDetectionScore = detectionResults.detections[0].categories[0].score;
+            const faceDetectionScore = detectionResults.detections[0].categories[0].score;
             console.log("Face detection score: ", faceDetectionScore);
             return faceDetectionScore;
         }
@@ -74,14 +74,14 @@ import {
 
     function predictUsingFaceLandmarker(landmarkerResults)
     {
-        let blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
+        const blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
         console.log(blendshapeList);
 
         for (let i = 0; i < blendshapeList.length; i++)
         {
-            let li = document.createElement('li');
-            let score = blendshapeList[i].score;
-            li.appendChild(document.createTextNode(`${blendshapeList[i].categoryName}: Score: ${score.toFixed(10)}`));
+            const li = document.createElement('li');
+            const currentBlendshape = blendshapeList[i];
+            li.appendChild(document.createTextNode(`${currentBlendshape.categoryName}: Score: ${currentBlendshape.score.toFixed(10)}`));
             blendshapesList.appendChild(li);
         }
     }
@@ -133,7 +133,7 @@ import {
             return;
         }
 
-        let landmarkerResults = faceLandmarker.detect(imageDisplay);
+        const landmarkerResults = faceLandmarker.detect(imageDisplay);
         // If Landmarker was able to analyze blendshapes
         if (landmarkerResults.faceBlendshapes.length > 0) 
         {
