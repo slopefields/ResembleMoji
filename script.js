@@ -7,6 +7,7 @@ import {
     const imageUpload = document.getElementById('imageUpload');
     const imageDisplay = document.getElementById('imageDisplay');
     const predictButton = document.getElementById('predictButton');
+    const blendshapesList = document.getElementById('blendshapes');
 
     const reader = new FileReader();
 
@@ -76,15 +77,23 @@ import {
     function predictUsingFaceLandmarker()
     {
         let landmarkerResults = faceLandmarker.detect(imageDisplay);
-        const blendshapes = landmarkerResults.faceBlendshapes;
-        console.log(blendshapes);
+        const blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
+        console.log(blendshapeList);
+
+        for (let i = 0; i < blendshapeList.length; i++)
+        {
+            let li = document.createElement('li');
+            let score = blendshapeList[i].score;
+            li.appendChild(document.createTextNode(`${blendshapeList[i].categoryName}: Score: ${score.toFixed(10)}`));
+            blendshapesList.appendChild(li);
+        }
     }
 
     async function predictUsingMobileNet()
     {
         const predictions = await mobileNetModel.classify(imageDisplay);
-            console.log(predictions);
-            displayPredictions(predictions);
+        console.log(predictions);
+        displayPredictions(predictions);
     }
 
     imageUpload.addEventListener('change', function()
