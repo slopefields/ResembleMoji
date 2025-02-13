@@ -10,8 +10,8 @@ import {
     const reader = new FileReader();
 
     let mobileNetModel;
-    let faceMeshModel;
     let faceDetectionModel;
+    let faceLandmarker;
 
     async function loadFaceDetectionModel()
     {
@@ -26,9 +26,18 @@ import {
             });
     }
 
-    async function loadFaceMeshModel()
+    async function loadFaceLandmarker()
     {
-       
+        const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
+        faceLandmarker = await faceLandmarker.createFromOptions(
+            vision,
+            {
+                baseOptions: {
+                    modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`
+                },
+                runningMode: "IMAGE"
+            }
+        )
     }
 
     async function loadMobileNetModel()
@@ -109,12 +118,14 @@ import {
             console.log("Face detected with over 0.7 confidence");
         }
         else
+        {
             predictUsingMobileNet();
+        }
     });
 
     document.addEventListener("DOMContentLoaded", () =>
     {
         loadFaceDetectionModel();
-        loadFaceMeshModel();
+        loadFaceLandmarker();
         loadMobileNetModel();
     });
