@@ -95,6 +95,7 @@ import {
 
     function clearResults()
     {
+        // Reset MobileNet and Landmarker predictions
         predictionsDiv.innerHTML = "";
         blendshapesList.innerHTML = "";
     }
@@ -117,6 +118,7 @@ import {
 
     predictButton.addEventListener('click', async function()
     {
+        // Clear previous predictions before generating new ones
         clearResults();
 
         // If there are no files (length == 0)
@@ -132,6 +134,7 @@ import {
         }
 
         let landmarkerResults = faceLandmarker.detect(imageDisplay);
+        // If Landmarker was able to analyze blendshapes
         if (landmarkerResults.faceBlendshapes.length > 0) 
         {
             console.log("Face blendshapes detected!");
@@ -139,7 +142,6 @@ import {
         }
         else
         {
-            //predictUsingFaceLandmarker();
             predictUsingMobileNet();
         }
     });
