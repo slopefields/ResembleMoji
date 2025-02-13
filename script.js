@@ -1,6 +1,7 @@
 import {
     FaceDetector,
-    FilesetResolver
+    FilesetResolver,
+    FaceLandmarker
   } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
     
     const imageUpload = document.getElementById('imageUpload');
@@ -29,13 +30,14 @@ import {
     async function loadFaceLandmarker()
     {
         const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
-        faceLandmarker = await faceLandmarker.createFromOptions(
+        faceLandmarker = await FaceLandmarker.createFromOptions(
             vision,
             {
                 baseOptions: {
                     modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`
                 },
-                runningMode: "IMAGE"
+                runningMode: "IMAGE",
+                outputFaceBlendshapes: true
             }
         )
     }
@@ -48,7 +50,7 @@ import {
 
     function displayPredictions(predictions)
     {
-        const predictionsDiv = document.getElementById('predictions');
+        const predictionsDiv = document.getElementById('mobilenet-predictions');
         predictionsDiv.innerHTML = "";
 
         predictions.forEach(prediction => {
@@ -71,9 +73,11 @@ import {
         return 0;
     }
 
-    function predictUsingFaceMesh()
+    function predictUsingFaceLandmarker()
     {
-
+        let landmarkerResults = faceLandmarker.detect(imageDisplay);
+        const blendshapes = landmarkerResults.faceBlendshapes;
+        console.log(blendshapes);
     }
 
     async function predictUsingMobileNet()
@@ -116,6 +120,7 @@ import {
         if (predictUsingFaceDetection() > 0.7) 
         {
             console.log("Face detected with over 0.7 confidence");
+            predictUsingFaceLandmarker();
         }
         else
         {
