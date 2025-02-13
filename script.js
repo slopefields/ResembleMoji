@@ -50,7 +50,7 @@ import {
         console.log("MobileNet model successfully loaded");
     };
 
-    function displayPredictions(predictions)
+    function displayMobileNetPredictions(predictions)
     {
         predictions.forEach(prediction => {
             const temp = document.createElement('p');
@@ -90,7 +90,7 @@ import {
     {
         const predictions = await mobileNetModel.classify(imageDisplay);
         console.log(predictions);
-        displayPredictions(predictions);
+        displayMobileNetPredictions(predictions);
     }
 
     function clearResults()
