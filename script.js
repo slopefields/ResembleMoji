@@ -72,10 +72,9 @@ import {
         return 0;
     }
 
-    function predictUsingFaceLandmarker()
+    function predictUsingFaceLandmarker(landmarkerResults)
     {
-        let landmarkerResults = faceLandmarker.detect(imageDisplay);
-        const blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
+        let blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
         console.log(blendshapeList);
 
         for (let i = 0; i < blendshapeList.length; i++)
@@ -119,7 +118,7 @@ import {
     predictButton.addEventListener('click', async function()
     {
         clearResults();
-        
+
         // If there are no files (length == 0)
         if (!imageUpload.files.length)
         {
@@ -132,13 +131,15 @@ import {
             return;
         }
 
-        if (predictUsingFaceDetection() > 0.7) 
+        let landmarkerResults = faceLandmarker.detect(imageDisplay);
+        if (landmarkerResults.faceBlendshapes.length > 0) 
         {
-            console.log("Face detected with over 0.7 confidence");
-            predictUsingFaceLandmarker();
+            console.log("Face blendshapes detected!");
+            predictUsingFaceLandmarker(landmarkerResults);
         }
         else
         {
+            //predictUsingFaceLandmarker();
             predictUsingMobileNet();
         }
     });
