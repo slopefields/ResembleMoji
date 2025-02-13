@@ -8,6 +8,7 @@ import {
     const imageDisplay = document.getElementById('imageDisplay');
     const predictButton = document.getElementById('predictButton');
     const blendshapesList = document.getElementById('blendshapes');
+    const predictionsDiv = document.getElementById('mobilenet-predictions');
 
     const reader = new FileReader();
 
@@ -51,9 +52,6 @@ import {
 
     function displayPredictions(predictions)
     {
-        const predictionsDiv = document.getElementById('mobilenet-predictions');
-        predictionsDiv.innerHTML = "";
-
         predictions.forEach(prediction => {
             const temp = document.createElement('p');
             temp.textContent = `${prediction.className} : ${(prediction.probability * 100).toFixed(2)}%`;
@@ -96,6 +94,12 @@ import {
         displayPredictions(predictions);
     }
 
+    function clearResults()
+    {
+        predictionsDiv.innerHTML = "";
+        blendshapesList.innerHTML = "";
+    }
+
     imageUpload.addEventListener('change', function()
     {
         // Get first file (only one image is allowed)
@@ -114,6 +118,8 @@ import {
 
     predictButton.addEventListener('click', async function()
     {
+        clearResults();
+        
         // If there are no files (length == 0)
         if (!imageUpload.files.length)
         {
