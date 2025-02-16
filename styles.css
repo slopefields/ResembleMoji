@@ -1,0 +1,7 @@
+#image-display {
+    max-width: 640px;
+    max-height: 480px;
+    width: auto;
+    height: auto;
+    display: block;
+}
