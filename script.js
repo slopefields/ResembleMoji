@@ -4,9 +4,9 @@ import {
     FaceLandmarker
   } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
     
-    const imageUpload = document.getElementById('imageUpload');
-    const imageDisplay = document.getElementById('imageDisplay');
-    const predictButton = document.getElementById('predictButton');
+    const imageUpload = document.getElementById('image-upload');
+    const imageDisplay = document.getElementById('image-display');
+    const predictButton = document.getElementById('predict-button');
     const blendshapesList = document.getElementById('blendshapes');
     const predictionsDiv = document.getElementById('mobilenet-predictions');
 
@@ -46,6 +46,7 @@ import {
 
     async function loadMobileNetModel()
     {
+        console.log("Awaiting MobileNet model loading...");
         mobileNetModel = await mobilenet.load();
         console.log("MobileNet model successfully loaded");
     };
