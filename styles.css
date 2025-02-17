@@ -115,3 +115,7 @@ body {
 #predict-button:hover {
     background: #333;
 }
+
+.small-font {
+    font-size: 10px;
+}
