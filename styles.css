@@ -1,7 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    background: white;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#main-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    background: #FFC83D;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#app-title {
+    align-self: flex-start;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#main-box {
+    width: 100%;
+    height: 250px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#webcam,
 #image-display {
-    max-width: 640px;
-    max-height: 480px;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+#fab-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+/* For the main button (with the "+") */
+#fab {
+    width: 50px;
+    height: 50px;
+    background: black;
+    color: white;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#fab:hover {
+    transform: scale(1.1);
+}
+
+#fab-options {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    bottom: 60px;
+    left: 10px;
+}
+
+/* For image upload and camera buttons */
+.fab-button {
+    width: 40px;
+    height: 40px;
+    margin: 5px 0;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.fab-button:hover {
+    background: #ffdb6d;
+}
+
+#predict-button {
+    padding: 10px 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#predict-button:hover {
+    background: #333;
 }

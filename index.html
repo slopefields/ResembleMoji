@@ -9,31 +9,35 @@
 </head>
 
 <body>
-    <h1>ResembleMoji</h1>
+    <div id="main-container">
+        <!-- Header -->
+        <h1 id="app-title">ResembleMoji</h1>
 
-    <!--Image upload-->
-    <label for="upload">Choose a photo to upload</label><br>
-    <input type="file" id="image-upload" name="upload" accept="image/*">
+        <!-- Main Content Box -->
+        <div id="main-box">
+            <video id="webcam" autoplay playsinline class="hidden"></video>
+            <img id="image-display" class="hidden">
+        </div>
 
-    <!-- Webcam input -->
-    <video id="webcam" autoplay playsinline></video>
-    <button id="enable-webcam">Enable webcam</button>
-    <button id="capture-button">Capture from webcam</button>
+        <!-- Floating action button for image upload and camera -->
+        <div id="fab-container">
+            <button id="fab">+</button>
+            <div id="fab-options">
+                <label for="image-upload" class="fab-button">🖼️</label>
+                <input type="file" id="image-upload" accept="image/*" hidden>
+                <button id="enable-webcam" class="fab-button">📷</button>
+            </div>
+        </div>
 
-    <!--Uploaded/Captured image display-->
-    <img id="image-display"></img>
+        <!-- Predict Button -->
+        <button id="predict-button">Predict</button>
 
+        <!-- Predictions -->
+        <div id="mobilenet-predictions"></div>
+        <ul id="blendshapes"></ul>
+    </div>
 
-    <!--Submit and predict button-->
-    <button id="predict-button">Predict</button>
-
-    <!--Section for MobileNet prediction rankings-->
-    <div id="mobilenet-predictions"></div>
-
-    <!-- Unordered List for Landmarker blendshapes-->
-    <ul id="blendshapes"></ul>
-
-    <!--Scripts-->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"></script>
