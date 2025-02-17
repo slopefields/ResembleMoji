@@ -15,8 +15,14 @@
     <label for="upload">Choose a photo to upload</label><br>
     <input type="file" id="image-upload" name="upload" accept="image/*">
 
-    <!--Uploaded image display-->
+    <!-- Webcam input -->
+    <video id="webcam" autoplay playsinline></video>
+    <button id="enable-webcam">Enable webcam</button>
+    <button id="capture-button">Capture from webcam</button>
+
+    <!--Uploaded/Captured image display-->
     <img id="image-display"></img>
+
 
     <!--Submit and predict button-->
     <button id="predict-button">Predict</button>

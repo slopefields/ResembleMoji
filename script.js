@@ -5,6 +5,9 @@ import {
   } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
     
     const imageUpload = document.getElementById('image-upload');
+    const webcamInput =  document.getElementById('webcam');
+    const enableWebcamButton = document.getElementById('enable-webcam');
+    const captureButton = document.getElementById('capture-button');
     const imageDisplay = document.getElementById('image-display');
     const predictButton = document.getElementById('predict-button');
     const blendshapesList = document.getElementById('blendshapes');
@@ -15,6 +18,43 @@ import {
     let mobileNetModel;
     let faceDetectionModel;
     let faceLandmarker;
+
+    // Check if webcam access is supported
+    if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
+    {
+        // Allow enable webcam button to be clicked if supported
+        enableWebcamButton.addEventListener('click', enableWebcam);
+        // Allow capture from webcam button to be clicked if supported
+        captureButton.addEventListener('click', captureFromWebcam);
+    }
+    else
+    {
+        alert('getUserMedia() not supported by browser');
+    }
+
+    // Attempt to enable webcam
+    async function enableWebcam()
+    {
+        try
+        {
+            const stream = await navigator.mediaDevices.getUserMedia({video: true});
+            webcamInput.srcObject = stream;
+        }
+        catch(error)
+        {
+            console.error("Error accessing webcam: ", error);
+        }
+    }
+
+    function captureFromWebcam()
+    {
+        const canvas = document.createElement("canvas");
+        canvas.width = webcamInput.videoWidth;
+        canvas.height = webcamInput.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(webcamInput, 0, 0, canvas.width, canvas.height);
+        imageDisplay.src = canvas.toDataURL("image/png");
+    }
 
     async function loadFaceDetectionModel()
     {
