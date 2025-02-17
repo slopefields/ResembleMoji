@@ -12,6 +12,8 @@ import {
     const predictButton = document.getElementById('predict-button');
     const blendshapesList = document.getElementById('blendshapes');
     const predictionsDiv = document.getElementById('mobilenet-predictions');
+    const fab = document.getElementById('fab');
+    const fabOptions = document.getElementById('fab-options');
 
     const reader = new FileReader();
 
@@ -35,6 +37,9 @@ import {
     // Attempt to enable webcam
     async function enableWebcam()
     {
+        webcamInput.classList.remove("hidden");
+        imageDisplay.classList.add("hidden");
+
         try
         {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
@@ -141,12 +146,21 @@ import {
         blendshapesList.innerHTML = "";
     }
 
+    fab.addEventListener('click', () => {
+        console.log("flex");
+        fabOptions.style.display = fabOptions.style.display === 'flex' ? 'none' : 'flex';
+    });
+
     imageUpload.addEventListener('change', function()
     {
         // Get first file (only one image is allowed)
         const file = imageUpload.files[0];
         // If null or undefined, exit function
         if (!file) return;
+
+        imageDisplay.classList.remove("hidden");
+        webcamInput.classList.add("hidden");
+
         // Read file as a Data URL so it can be used as the source for the <img> tag
         reader.readAsDataURL(file);
     });
