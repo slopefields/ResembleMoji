@@ -162,8 +162,8 @@ import {
         // Clear previous predictions before generating new ones
         clearResults();
 
-        // If there are no files (length == 0)
-        if (!imageUpload.files.length)
+        // Check for image attachment (either picture or webcam capture)
+        if (!imageDisplay.src)
         {
             alert('Attach an image first!');
             return;
