@@ -132,7 +132,8 @@ import {
     function predictUsingFaceLandmarker(landmarkerResults)
     {
         const blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
-        console.log(blendshapeList);
+        const scoresList = blendshapeList.map(entry => entry.score);
+        console.log(scoresList);
 
         for (let i = 0; i < blendshapeList.length; i++)
         {
@@ -141,6 +142,54 @@ import {
             li.appendChild(document.createTextNode(`${currentBlendshape.categoryName}: Score: ${currentBlendshape.score.toFixed(10)}`));
             blendshapesList.appendChild(li);
         }
+        findMatch(scoresList);
+    }
+
+    function calculateMagnitude(vector)
+    {
+        var squaresTotal = 0;
+        vector.forEach(value => {
+            squaresTotal += Math.pow(value, 2);
+        });
+        console.log("Magnitude: ", Math.sqrt(squaresTotal));
+        return Math.sqrt(squaresTotal);
+    }
+
+    function calculateDotProduct(vectorA, vectorB)
+    {
+        var sum = 0;
+        if (vectorA.length == vectorB.length)
+        {
+            for (let i = 0; i < vectorA.length; i++)
+            {
+                sum += vectorA[i] * vectorB[i];
+            }
+        }
+        console.log("Dot product: ", sum);
+        return sum;
+    }
+
+    function findMatch(blendshapeVector)
+    {
+        var minTheta = Infinity;
+        var match = null;
+        
+        for (let emoji in emojiVectors)
+        {
+            if (emojiVectors.hasOwnProperty(emoji))
+            {
+                var theta = Math.acos(calculateDotProduct(emojiVectors[emoji], blendshapeVector) / 
+                    (calculateMagnitude(emojiVectors[emoji]) * calculateMagnitude(blendshapeVector)));
+                console.log("Theta: ", theta);
+                if (theta < minTheta)
+                {
+                    minTheta = theta;
+                    match = emoji;
+                }
+            }
+        }
+        console.log("Best match:", match);
+        return match;
     }
 
     async function predictUsingMobileNet()
@@ -158,7 +207,6 @@ import {
     }
 
     fab.addEventListener('click', () => {
-        console.log("flex");
         fabOptions.style.display = fabOptions.style.display === 'flex' ? 'none' : 'flex';
     });
 
