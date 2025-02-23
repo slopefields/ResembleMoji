@@ -4,7 +4,7 @@
     const captureButton = document.getElementById('capture-button');
     const imageDisplay = document.getElementById('image-display');
     const predictButton = document.getElementById('predict-button');
-    const blendshapesList = document.getElementById('blendshapes');
+    const expressionList = document.getElementById('expressions');
     const predictionsDiv = document.getElementById('mobilenet-predictions');
     const fab = document.getElementById('fab');
     const fabOptions = document.getElementById('fab-options');
@@ -100,7 +100,7 @@
     {
         // Reset MobileNet and Expression predictions
         predictionsDiv.innerHTML = "";
-        blendshapesList.innerHTML = "";
+        expressionList.innerHTML = "";
     }
 
     fab.addEventListener('click', () => {
