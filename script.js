@@ -74,6 +74,15 @@ import {
         )
     }
 
+    async function loadFaceExpressionModel()
+    {
+        // Load all required models from face-api
+        await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
+        await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+        await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+        console.log("All required APIs for face expression loaded");
+    }
+
     async function loadMobileNetModel()
     {
         console.log("Awaiting MobileNet model loading...");
@@ -110,6 +119,12 @@ import {
         const predictions = await mobileNetModel.classify(imageDisplay);
         console.log(predictions);
         displayMobileNetPredictions(predictions);
+    }
+
+    async function predictExpression()
+    {
+        const detectionWithExpressions = await faceapi.detectSingleFace(imageDisplay).withFaceLandmarks().withFaceExpressions();
+        console.log(detectionWithExpressions);
     }
 
     function clearResults()
@@ -166,6 +181,7 @@ import {
         {
             console.log("Face blendshapes detected!");
             predictUsingFaceLandmarker(landmarkerResults);
+            predictExpression();
         }
         else
         {
@@ -177,4 +193,5 @@ import {
     {
         loadFaceLandmarker();
         loadMobileNetModel();
+        loadFaceExpressionModel();
     });
