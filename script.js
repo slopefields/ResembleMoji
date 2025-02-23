@@ -1,5 +1,4 @@
 import {
-    FaceDetector,
     FilesetResolver,
     FaceLandmarker
   } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
@@ -15,21 +14,9 @@ import {
     const fab = document.getElementById('fab');
     const fabOptions = document.getElementById('fab-options');
 
-    const emojiVectors = {
-        '😀': [0.0, 0.0, 0.0, 0.2, 0.1, 0.1, 0.0, 0.0, 0.0, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.0, 0.0, 0.1, 0.1, 0.0, 0.0, 0.2, 0.0, 0.9, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 0.9, 0.02, 0.02, 0.02, 0.02, 0.9, 0.9, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-       '😁': [0.0, 0.0, 0.0, 0.3, 0.15, 0.15, 0.0, 0.4, 0.4, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.8, 0.8, 0.2, 0.2, 0.0, 0.0, 0.2, 0.0, 1.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 0.95, 0.02, 0.02, 0.02, 0.02, 0.95, 0.95, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-       '😂': [0.0, 0.0, 0.0, 0.3, 0.2, 0.2, 0.0, 1.0, 1.0, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 1.0, 1.0, 0.3, 0.3, 0.0, 0.0, 0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 1.0, 0.02, 0.02, 0.02, 0.02, 1.0, 1.0, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-       '🤣': [0.0, 0.0, 0.0, 0.3, 0.2, 0.2, 0.0, 1.0, 1.0, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 1.0, 1.0, 0.4, 0.4, 0.0, 0.0, 0.8, 0.0, 1.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 1.0, 0.02, 0.02, 0.02, 0.02, 1.0, 1.0, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-       '😃': [0.0, 0.0, 0.0, 0.5, 0.25, 0.25, 0.0, 0.3, 0.3, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.9, 0.9, 0.2, 0.2, 0.0, 0.0, 0.5, 0.0, 0.9, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 0.9, 0.02, 0.02, 0.02, 0.02, 0.9, 0.9, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-       '😄': [0.0, 0.0, 0.0, 0.6, 0.3, 0.3, 0.0, 0.2, 0.2, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 1.0, 1.0, 0.2, 0.2, 0.0, 0.0, 0.4, 0.0, 1.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 1.0, 0.02, 0.02, 0.02, 0.02, 1.0, 1.0, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-       '😆': [0.0, 0.0, 0.0, 0.7, 0.35, 0.35, 0.0, 0.15, 0.15, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 1.0, 1.0, 0.2, 0.2, 0.0, 0.0, 0.3, 0.0, 1.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 1.0, 0.02, 0.02, 0.02, 0.02, 1.0, 1.0, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-       '😉': [0.0, 0.0, 0.0, 0.4, 0.2, 0.2, 0.0, 0.3, 0.3, 0.02, 0.02, 0.1, 0.1, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.8, 0.8, 0.2, 0.2, 0.0, 0.0, 0.4, 0.0, 1.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.01, 0.01, 0.0, 0.0, 0.85, 0.02, 0.02, 0.02, 0.02, 0.85, 0.85, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        };
-
     const reader = new FileReader();
 
     let mobileNetModel;
-    let faceDetectionModel;
     let faceLandmarker;
 
     // Check if webcam access is supported
@@ -72,19 +59,6 @@ import {
         imageDisplay.src = canvas.toDataURL("image/png");
     }
 
-    async function loadFaceDetectionModel()
-    {
-        const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
-        faceDetectionModel = await FaceDetector.createFromOptions(
-            vision,
-            {
-              baseOptions: {
-                modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite`
-              },
-              runningMode: "IMAGE"
-            });
-    }
-
     async function loadFaceLandmarker()
     {
         const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
@@ -116,19 +90,6 @@ import {
         });
     }
 
-    function predictUsingFaceDetection()
-    {
-        const detectionResults = faceDetectionModel.detect(imageDisplay);
-        
-        if (detectionResults.detections.length > 0)
-        {
-            const faceDetectionScore = detectionResults.detections[0].categories[0].score;
-            console.log("Face detection score: ", faceDetectionScore);
-            return faceDetectionScore;
-        }
-        return 0;
-    }
-
     function predictUsingFaceLandmarker(landmarkerResults)
     {
         const blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
@@ -142,54 +103,6 @@ import {
             li.appendChild(document.createTextNode(`${currentBlendshape.categoryName}: Score: ${currentBlendshape.score.toFixed(10)}`));
             blendshapesList.appendChild(li);
         }
-        findMatch(scoresList);
-    }
-
-    function calculateMagnitude(vector)
-    {
-        var squaresTotal = 0;
-        vector.forEach(value => {
-            squaresTotal += Math.pow(value, 2);
-        });
-        console.log("Magnitude: ", Math.sqrt(squaresTotal));
-        return Math.sqrt(squaresTotal);
-    }
-
-    function calculateDotProduct(vectorA, vectorB)
-    {
-        var sum = 0;
-        if (vectorA.length == vectorB.length)
-        {
-            for (let i = 0; i < vectorA.length; i++)
-            {
-                sum += vectorA[i] * vectorB[i];
-            }
-        }
-        console.log("Dot product: ", sum);
-        return sum;
-    }
-
-    function findMatch(blendshapeVector)
-    {
-        var minTheta = Infinity;
-        var match = null;
-        
-        for (let emoji in emojiVectors)
-        {
-            if (emojiVectors.hasOwnProperty(emoji))
-            {
-                var theta = Math.acos(calculateDotProduct(emojiVectors[emoji], blendshapeVector) / 
-                    (calculateMagnitude(emojiVectors[emoji]) * calculateMagnitude(blendshapeVector)));
-                console.log("Theta: ", theta);
-                if (theta < minTheta)
-                {
-                    minTheta = theta;
-                    match = emoji;
-                }
-            }
-        }
-        console.log("Best match:", match);
-        return match;
     }
 
     async function predictUsingMobileNet()
@@ -262,7 +175,6 @@ import {
 
     document.addEventListener("DOMContentLoaded", () =>
     {
-        loadFaceDetectionModel();
         loadFaceLandmarker();
         loadMobileNetModel();
     });
