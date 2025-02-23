@@ -1,8 +1,3 @@
-import {
-    FilesetResolver,
-    FaceLandmarker
-  } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
-
     const imageUpload = document.getElementById('image-upload');
     const webcamInput =  document.getElementById('webcam');
     const enableWebcamButton = document.getElementById('enable-webcam');
@@ -17,7 +12,6 @@ import {
     const reader = new FileReader();
 
     let mobileNetModel;
-    let faceLandmarker;
 
     // Check if webcam access is supported
     if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
@@ -59,21 +53,6 @@ import {
         imageDisplay.src = canvas.toDataURL("image/png");
     }
 
-    async function loadFaceLandmarker()
-    {
-        const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
-        faceLandmarker = await FaceLandmarker.createFromOptions(
-            vision,
-            {
-                baseOptions: {
-                    modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`
-                },
-                runningMode: "IMAGE",
-                outputFaceBlendshapes: true
-            }
-        )
-    }
-
     async function loadFaceExpressionModel()
     {
         // Load all required models from face-api
@@ -99,21 +78,6 @@ import {
         });
     }
 
-    function predictUsingFaceLandmarker(landmarkerResults)
-    {
-        const blendshapeList = landmarkerResults.faceBlendshapes[0].categories;
-        const scoresList = blendshapeList.map(entry => entry.score);
-        console.log(scoresList);
-
-        for (let i = 0; i < blendshapeList.length; i++)
-        {
-            const li = document.createElement('li');
-            const currentBlendshape = blendshapeList[i];
-            li.appendChild(document.createTextNode(`${currentBlendshape.categoryName}: Score: ${currentBlendshape.score.toFixed(10)}`));
-            blendshapesList.appendChild(li);
-        }
-    }
-
     async function predictUsingMobileNet()
     {
         const predictions = await mobileNetModel.classify(imageDisplay);
@@ -121,11 +85,8 @@ import {
         displayMobileNetPredictions(predictions);
     }
 
-    async function predictExpression()
+    async function predictExpression(detectionWithExpressions)
     {
-        const detectionWithExpressions = await faceapi.detectSingleFace(imageDisplay).withFaceLandmarks().withFaceExpressions();
-        console.log(detectionWithExpressions);
-
         const expressions = detectionWithExpressions.expressions;
         console.log(expressions);
         for (const key in expressions)
@@ -137,7 +98,7 @@ import {
 
     function clearResults()
     {
-        // Reset MobileNet and Landmarker predictions
+        // Reset MobileNet and Expression predictions
         predictionsDiv.innerHTML = "";
         blendshapesList.innerHTML = "";
     }
@@ -183,13 +144,11 @@ import {
             return;
         }
 
-        const landmarkerResults = faceLandmarker.detect(imageDisplay);
-        // If Landmarker was able to analyze blendshapes
-        if (landmarkerResults.faceBlendshapes.length > 0) 
+        const detectionWithExpressions = await faceapi.detectSingleFace(imageDisplay).withFaceLandmarks().withFaceExpressions();
+        if (detectionWithExpressions) 
         {
-            console.log("Face blendshapes detected!");
-            predictUsingFaceLandmarker(landmarkerResults);
-            predictExpression();
+            console.log("Expressions detected!");
+            predictExpression(detectionWithExpressions);
         }
         else
         {
@@ -199,7 +158,6 @@ import {
 
     document.addEventListener("DOMContentLoaded", () =>
     {
-        loadFaceLandmarker();
         loadMobileNetModel();
         loadFaceExpressionModel();
     });
