@@ -125,6 +125,14 @@ import {
     {
         const detectionWithExpressions = await faceapi.detectSingleFace(imageDisplay).withFaceLandmarks().withFaceExpressions();
         console.log(detectionWithExpressions);
+
+        const expressions = detectionWithExpressions.expressions;
+        console.log(expressions);
+        for (const key in expressions)
+        {
+            if (expressions[key] > 0.05)
+                console.log(`Detected with over 5% confidence: ${key}, with score of ${expressions[key]}`)
+        }
     }
 
     function clearResults()
