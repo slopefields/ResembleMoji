@@ -4,8 +4,8 @@
     const captureButton = document.getElementById('capture-button');
     const imageDisplay = document.getElementById('image-display');
     const predictButton = document.getElementById('predict-button');
-    const expressionList = document.getElementById('expressions');
     const predictionsDiv = document.getElementById('mobilenet-predictions');
+    const expressionsDiv = document.getElementById('expression-predictions');
     const fab = document.getElementById('fab');
     const fabOptions = document.getElementById('fab-options');
 
@@ -88,19 +88,56 @@
     async function predictExpression(detectionWithExpressions)
     {
         const expressions = detectionWithExpressions.expressions;
-        console.log(expressions);
+        console.log("expressions: ", expressions);
         for (const key in expressions)
         {
             if (expressions[key] > 0.05)
                 console.log(`Detected with over 5% confidence: ${key}, with score of ${expressions[key]}`)
         }
+        return mapToEmoji(expressions);
     }
 
     function clearResults()
     {
         // Reset MobileNet and Expression predictions
         predictionsDiv.innerHTML = "";
-        expressionList.innerHTML = "";
+        expressionsDiv.innerHTML = "";
+    }
+
+    function findEmoji(expressions)
+    {
+        /*
+        category names:
+        neutral
+        happy
+        sad
+        angry
+        fearful
+        disgusted
+        surprised
+        */
+
+        const primaryEmojiMap = {
+            angry: "😠",
+            disgusted: "🤢",
+            fearful: "😨",
+            happy: "😃",
+            neutral: "😐",
+            sad: "😢",
+            surprised: "😲"
+        }
+
+        let highestScore = 0;
+        let highestExpression = '';
+        for (const expression in expressions)
+        {
+            if (expressions[expression] > highestScore)
+            {
+                highestScore = expressions[expression];
+                highestExpression = expression;
+            }
+        }
+        return primaryEmojiMap[highestExpression];
     }
 
     fab.addEventListener('click', () => {
@@ -148,7 +185,7 @@
         if (detectionWithExpressions) 
         {
             console.log("Expressions detected!");
-            predictExpression(detectionWithExpressions);
+            console.log(predictExpression(detectionWithExpressions));
         }
         else
         {
