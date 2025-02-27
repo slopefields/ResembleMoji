@@ -94,7 +94,7 @@
             if (expressions[key] > 0.05)
                 console.log(`Detected with over 5% confidence: ${key}, with score of ${expressions[key]}`)
         }
-        return mapToEmoji(expressions);
+        return findExpressionEmoji(expressions);
     }
 
     function clearResults()
@@ -104,7 +104,7 @@
         expressionsDiv.innerHTML = "";
     }
 
-    function findEmoji(expressions)
+    function findExpressionEmoji(expressions)
     {
         /*
         category names:
@@ -138,7 +138,7 @@
             }
         }
         return primaryEmojiMap[highestExpression];
-    }
+    }; 
 
     fab.addEventListener('click', () => {
         fabOptions.style.display = fabOptions.style.display === 'flex' ? 'none' : 'flex';
