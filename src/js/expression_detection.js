@@ -1,58 +1,61 @@
-async function loadFaceExpressionModel()
-{
-    // Load all required models from face-api
-    await faceapi.nets.ssdMobilenetv1.loadFromUri('/models/face-api');
-    await faceapi.nets.faceLandmark68Net.loadFromUri('/models/face-api');
-    await faceapi.nets.faceExpressionNet.loadFromUri('/models/face-api');
-    console.log("All required APIs for face expression loaded");
-}
+const MODEL_PATH = '/models/face-api';
 
-async function predictExpression(detectionWithExpressions)
+export class ExpressionModel
 {
-    const expressions = detectionWithExpressions.expressions;
-    console.log("expressions: ", expressions);
-    for (const key in expressions)
+    async loadFaceExpressionModel()
     {
-        if (expressions[key] > 0.05)
-            console.log(`Detected with over 5% confidence: ${key}, with score of ${expressions[key]}`)
-    }
-    return findExpressionEmoji(expressions);
-}
-
-function findExpressionEmoji(expressions)
-{
-    /*
-    category names:
-    neutral
-    happy
-    sad
-    angry
-    fearful
-    disgusted
-    surprised
-    */
-
-    const primaryEmojiMap = {
-        angry: "😠",
-        disgusted: "🤢",
-        fearful: "😨",
-        happy: "😃",
-        neutral: "😐",
-        sad: "😢",
-        surprised: "😲"
+        // Load all required models from face-api
+        await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_PATH);
+        await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_PATH);
+        await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_PATH);
+        console.log("All required APIs for face expression loaded");
     }
 
-    let highestScore = 0;
-    let highestExpression = '';
-    for (const expression in expressions)
+    async predictExpression(detectionWithExpressions)
     {
-        if (expressions[expression] > highestScore)
+        const expressions = detectionWithExpressions.expressions;
+        console.log("expressions: ", expressions);
+        for (const key in expressions)
         {
-            highestScore = expressions[expression];
-            highestExpression = expression;
+            if (expressions[key] > 0.05)
+                console.log(`Detected with over 5% confidence: ${key}, with score of ${expressions[key]}`)
         }
+        return this.findExpressionEmoji(expressions);
     }
-    return primaryEmojiMap[highestExpression];
-};
 
-export {loadFaceExpressionModel, predictExpression, findExpressionEmoji};
+    findExpressionEmoji(expressions)
+    {
+        /*
+        category names:
+        neutral
+        happy
+        sad
+        angry
+        fearful
+        disgusted
+        surprised
+        */
+
+        const primaryEmojiMap = {
+            angry: "😠",
+            disgusted: "🤢",
+            fearful: "😨",
+            happy: "😃",
+            neutral: "😐",
+            sad: "😢",
+            surprised: "😲"
+        }
+
+        let highestScore = 0;
+        let highestExpression = '';
+        for (const expression in expressions)
+        {
+            if (expressions[expression] > highestScore)
+            {
+                highestScore = expressions[expression];
+                highestExpression = expression;
+            }
+        }
+        return primaryEmojiMap[highestExpression];
+    };
+};

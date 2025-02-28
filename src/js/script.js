@@ -1,4 +1,4 @@
-    import {loadFaceExpressionModel, predictExpression, findExpressionEmoji} from './expression_detection.js';
+    import { ExpressionModel } from './expression_detection.js';
    
    const imageUpload = document.getElementById('image-upload');
     const webcamInput =  document.getElementById('webcam');
@@ -14,6 +14,7 @@
     const reader = new FileReader();
 
     let mobileNetModel;
+    let expressionModel = new ExpressionModel();
 
     // Check if webcam access is supported
     if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
@@ -138,7 +139,8 @@
         if (detectionWithExpressions) 
         {
             console.log("Expressions detected!");
-            console.log(predictExpression(detectionWithExpressions));
+            const expressionEmoji = await expressionModel.predictExpression(detectionWithExpressions);
+            console.log(`Predicted emoji: ${expressionEmoji}`);
         }
         else
         {
@@ -149,5 +151,5 @@
     document.addEventListener("DOMContentLoaded", () =>
     {
         loadMobileNetModel();
-        loadFaceExpressionModel();
+        expressionModel.loadFaceExpressionModel();
     });
