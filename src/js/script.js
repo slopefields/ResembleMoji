@@ -56,9 +56,9 @@
     async function loadFaceExpressionModel()
     {
         // Load all required models from face-api
-        await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
-        await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
-        await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+        await faceapi.nets.ssdMobilenetv1.loadFromUri('/models/face-api');
+        await faceapi.nets.faceLandmark68Net.loadFromUri('/models/face-api');
+        await faceapi.nets.faceExpressionNet.loadFromUri('/models/face-api');
         console.log("All required APIs for face expression loaded");
     }
 
@@ -107,7 +107,7 @@
 
     function findObjectEmoji(predictions)
     {
-        predictions.foreach(prediction => {
+        predictions.forEach(prediction => {
             
         });
     }
