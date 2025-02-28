@@ -83,6 +83,7 @@
         const predictions = await mobileNetModel.classify(imageDisplay);
         console.log(predictions);
         displayMobileNetPredictions(predictions);
+        console.log(findObjectEmoji(predictions));
     }
 
     async function predictExpression(detectionWithExpressions)
@@ -102,6 +103,13 @@
         // Reset MobileNet and Expression predictions
         predictionsDiv.innerHTML = "";
         expressionsDiv.innerHTML = "";
+    }
+
+    function findObjectEmoji(predictions)
+    {
+        predictions.foreach(prediction => {
+            
+        });
     }
 
     function findExpressionEmoji(expressions)
@@ -138,7 +146,7 @@
             }
         }
         return primaryEmojiMap[highestExpression];
-    }; 
+    };
 
     fab.addEventListener('click', () => {
         fabOptions.style.display = fabOptions.style.display === 'flex' ? 'none' : 'flex';
