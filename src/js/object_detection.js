@@ -12,10 +12,18 @@ export class ObjectModel
 
     async load()
     {
-        this.model = await tf.loadFrozenModel(
-            MODEL_FILE_URL,
-            WEIGHT_MANIFEST_FILE_URL,
-        )
+        try
+        {
+            this.model = await tf.loadFrozenModel(
+                MODEL_FILE_URL,
+                WEIGHT_MANIFEST_FILE_URL,
+            )
+            console.log("Scavenger hunt model loaded successfully");
+        }
+        catch(error)
+        {
+            console.error("Error loading scavenger hunt model: ", error);
+        }
     }
 
     dispose()

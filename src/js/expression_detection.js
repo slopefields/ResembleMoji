@@ -4,11 +4,18 @@ export class ExpressionModel
 {
     async loadFaceExpressionModel()
     {
-        // Load all required models from face-api
-        await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_PATH);
-        await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_PATH);
-        await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_PATH);
-        console.log("All required APIs for face expression loaded");
+        try
+        {
+            // Load all required models from face-api
+            await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_PATH);
+            await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_PATH);
+            await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_PATH);
+            console.log("All required models for face expression loaded");
+        }
+        catch(error)
+        {
+            console.error("Error loading face-api models: ", error);
+        }
     }
 
     async predictExpression(detectionWithExpressions)
