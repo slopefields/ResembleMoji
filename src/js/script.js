@@ -1,4 +1,5 @@
     import { ExpressionModel } from './expression_detection.js';
+    import { ObjectModel } from './object_detection.js';
    
    const imageUpload = document.getElementById('image-upload');
     const webcamInput =  document.getElementById('webcam');
@@ -6,14 +7,14 @@
     const captureButton = document.getElementById('capture-button');
     const imageDisplay = document.getElementById('image-display');
     const predictButton = document.getElementById('predict-button');
-    const predictionsDiv = document.getElementById('mobilenet-predictions');
+    const predictionsDiv = document.getElementById('object-predictions');
     const expressionsDiv = document.getElementById('expression-predictions');
     const fab = document.getElementById('fab');
     const fabOptions = document.getElementById('fab-options');
 
     const reader = new FileReader();
 
-    let mobileNetModel;
+    let objectModel = new ObjectModel();
     let expressionModel = new ExpressionModel();
 
     // Check if webcam access is supported
@@ -56,14 +57,7 @@
         imageDisplay.src = canvas.toDataURL("image/png");
     }
 
-    async function loadMobileNetModel()
-    {
-        console.log("Awaiting MobileNet model loading...");
-        mobileNetModel = await mobilenet.load();
-        console.log("MobileNet model successfully loaded");
-    };
-
-    function displayMobileNetPredictions(predictions)
+    function displayObjectPredictions(predictions)
     {
         predictions.forEach(prediction => {
             const temp = document.createElement('p');
@@ -72,17 +66,9 @@
         });
     }
 
-    async function predictUsingMobileNet()
-    {
-        const predictions = await mobileNetModel.classify(imageDisplay);
-        console.log(predictions);
-        displayMobileNetPredictions(predictions);
-        console.log(findObjectEmoji(predictions));
-    }
-
     function clearResults()
     {
-        // Reset MobileNet and Expression predictions
+        // Reset Object and Expression predictions
         predictionsDiv.innerHTML = "";
         expressionsDiv.innerHTML = "";
     }
@@ -129,9 +115,9 @@
             alert('Attach an image first!');
             return;
         }
-        else if (!mobileNetModel)
+        else if (!objectModel)
         {
-            alert('MobileNet model still loading. Try again later.');
+            alert('Object detection model still loading. Try again later.');
             return;
         }
 
@@ -144,12 +130,12 @@
         }
         else
         {
-            predictUsingMobileNet();
+            
         }
     });
 
     document.addEventListener("DOMContentLoaded", () =>
     {
-        loadMobileNetModel();
+        objectModel.load();
         expressionModel.loadFaceExpressionModel();
     });
