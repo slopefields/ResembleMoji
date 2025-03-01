@@ -28,7 +28,7 @@ export class ObjectModel
 
     dispose()
     {
-        if (this.model)
+        if (this.model) 
         {
             this.model.dispose();
         }
@@ -36,12 +36,21 @@ export class ObjectModel
 
     predict(inputTensor)
     {
+        console.log("Input tensor received: ", inputTensor);
+
         const preprocessedInput = tf.div(tf.sub(inputTensor.asType('float32'), PREPROCESS_DIVIDER_VALUE), PREPROCESS_DIVIDER_VALUE);
+        console.log("Preprocessed input: ", preprocessedInput);
+
         const reshapedInput = preprocessedInput.reshape([1, ...preprocessedInput.shape]);
+        console.log("Reshaped input: ", reshapedInput);
+
         const inputs = {};
         inputs[INPUT_NODE_NAME] = reshapedInput;
 
-        return this.model.executeAsync(inputs, OUTPUT_NODE_NAME);
+        const output = this.model.execute(inputs, OUTPUT_NODE_NAME);
+        console.log("Model output: ", this.model.execute(inputs, OUTPUT_NODE_NAME));
+
+        return output;
     }
 
     getTopKClasses(predictions, topK = 3)
@@ -55,7 +64,7 @@ export class ObjectModel
             sortedPredictions.push({value : values[i], index: i});
         }
         sortedPredictions = sortedPredictions.sort((a,b) => {
-            b.value - a.value
+            return b.value - a.value;
         }).slice(0, topK);
 
         return sortedPredictions.map(x => ({
