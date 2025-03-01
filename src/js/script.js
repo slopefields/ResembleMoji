@@ -1,61 +1,27 @@
     import { ExpressionModel } from './expression_detection.js';
     import { ObjectModel } from './object_detection.js';
+    import { Camera } from './camera.js';
    
-   const imageUpload = document.getElementById('image-upload');
-    const webcamInput =  document.getElementById('webcam');
+    const imageUpload = document.getElementById('image-upload');
+    const imageDisplay = document.getElementById('image-display');
+    const webcamInput = document.getElementById('webcam');
     const enableWebcamButton = document.getElementById('enable-webcam');
     const captureButton = document.getElementById('capture-button');
-    const imageDisplay = document.getElementById('image-display');
     const predictButton = document.getElementById('predict-button');
     const predictionsDiv = document.getElementById('object-predictions');
     const expressionsDiv = document.getElementById('expression-predictions');
     const fab = document.getElementById('fab');
     const fabOptions = document.getElementById('fab-options');
 
+      
+
     const reader = new FileReader();
 
     let objectModel = new ObjectModel();
     let expressionModel = new ExpressionModel();
+    let camera = new Camera();
 
-    // Check if webcam access is supported
-    if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
-    {
-        // Allow enable webcam button to be clicked if supported
-        enableWebcamButton.addEventListener('click', enableWebcam);
-        // Allow capture from webcam button to be clicked if supported
-        captureButton.addEventListener('click', captureFromWebcam);
-    }
-    else
-    {
-        alert('getUserMedia() not supported by browser');
-    }
-
-    // Attempt to enable webcam
-    async function enableWebcam()
-    {
-        webcamInput.classList.remove("hidden");
-        imageDisplay.classList.add("hidden");
-
-        try
-        {
-            const stream = await navigator.mediaDevices.getUserMedia({video: true});
-            webcamInput.srcObject = stream;
-        }
-        catch(error)
-        {
-            console.error("Error accessing webcam: ", error);
-        }
-    }
-
-    function captureFromWebcam()
-    {
-        const canvas = document.createElement("canvas");
-        canvas.width = webcamInput.videoWidth;
-        canvas.height = webcamInput.videoHeight;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(webcamInput, 0, 0, canvas.width, canvas.height);
-        imageDisplay.src = canvas.toDataURL("image/png");
-    }
+    camera.checkWebcamSupport();
 
     function displayObjectPredictions(predictions)
     {
@@ -150,7 +116,7 @@
                     [VIDEO_PIXELS, VIDEO_PIXELS, 3]
                 );
                 */
-               
+
                 /* Resize image into 224x224, for use in static images */
                 const pixelsCropped = tf.image.resizeBilinear(pixels, [VIDEO_PIXELS, VIDEO_PIXELS]);
             
@@ -168,8 +134,6 @@
                 } catch (error) {
                     console.error("Prediction error:", error);
                 }
-
-                
             };
         };
     });
@@ -180,3 +144,7 @@
         await objectModel.load();
         await expressionModel.loadFaceExpressionModel();
     });
+
+    
+
+    export { imageUpload, imageDisplay, webcamInput, enableWebcamButton, captureButton, predictButton, predictionsDiv, expressionsDiv, fab, fabOptions };
