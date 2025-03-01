@@ -130,12 +130,53 @@
         }
         else
         {
+            const VIDEO_PIXELS = 224;
+            const image = new Image();
+            image.src = imageDisplay.src;
+            image.onload = async () => {
+                console.log("Image loaded:", image.width, image.height);
+                
+                // Process the image once it's fully loaded
+                const pixels = tf.browser.fromPixels(image);
+                
+                /* Cropping the center of the image, for use in live camera*/
+                /*
+                const centerHeight = pixels.shape[0] / 2
+                const beginHeight = Math.max(0, centerHeight - VIDEO_PIXELS / 2);
+                const centerWidth = pixels.shape[1] / 2;
+                const beginWidth = Math.max(0, centerWidth - VIDEO_PIXELS / 2);
+                const pixelsCropped = pixels.slice(
+                    [beginHeight, beginWidth, 0],
+                    [VIDEO_PIXELS, VIDEO_PIXELS, 3]
+                );
+                */
+               
+                /* Resize image into 224x224, for use in static images */
+                const pixelsCropped = tf.image.resizeBilinear(pixels, [VIDEO_PIXELS, VIDEO_PIXELS]);
             
-        }
+                console.log("Tensor created:", pixelsCropped);
+                
+            
+                try {
+                    console.log("Calling model prediction...");
+                    console.log("Tensor shape:", pixelsCropped.shape);
+                    const predictions = await objectModel.predict(pixelsCropped);
+                    console.log("Predictions:", predictions);
+
+                    const topK = objectModel.getTopKClasses(predictions, 10);
+                    console.log(topK);
+                } catch (error) {
+                    console.error("Prediction error:", error);
+                }
+
+                
+            };
+        };
     });
 
-    document.addEventListener("DOMContentLoaded", () =>
+    document.addEventListener("DOMContentLoaded", async () =>
     {
-        objectModel.load();
-        expressionModel.loadFaceExpressionModel();
+        console.log("Loading models...");
+        await objectModel.load();
+        await expressionModel.loadFaceExpressionModel();
     });
