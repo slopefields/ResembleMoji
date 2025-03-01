@@ -1,12 +1,10 @@
-import * as tfc from '@tensorflow/tfjs-core';
-import {loadFrozenModel, FrozenModel} from '@tensorflow/tfjs-converter';
-import {SCAVENGER_CLASSES} from './scavenger_classes';
+import { SCAVENGER_CLASSES } from './scavenger_classes.js';
 
-const MODEL_FILE_URL = 'model/tensorflowjs_model.pb';
-const WEIGHT_MANIFEST_FILE_URL = 'model/weights_manifest.json';
+const MODEL_FILE_URL = '/models/scavenger/tensorflowjs_model.pb';
+const WEIGHT_MANIFEST_FILE_URL = '/models/scavenger/weights_manifest.json';
 const INPUT_NODE_NAME = 'input';
 const OUTPUT_NODE_NAME = 'final_result';
-const PREPROCESS_DIVIDER_VALUE = tfc.scalar(255 / 2);
+const PREPROCESS_DIVIDER_VALUE = tf.scalar(255 / 2);
 
 export class ObjectModel
 {
@@ -14,10 +12,10 @@ export class ObjectModel
 
     async load()
     {
-        this.model = await loadFrozenModel(
-            MODEL_FILE_URL, 
-            WEIGHT_MANIFEST_FILE_URL
-        );
+        this.model = await tf.loadFrozenModel(
+            MODEL_FILE_URL,
+            WEIGHT_MANIFEST_FILE_URL,
+        )
     }
 
     dispose()
@@ -30,12 +28,12 @@ export class ObjectModel
 
     predict(inputTensor)
     {
-        const preprocessedInput = tfc.div(tfc.sub(input.asType('float32'), PREPROCESS_DIVIDER_VALUE));
+        const preprocessedInput = tf.div(tf.sub(inputTensor.asType('float32'), PREPROCESS_DIVIDER_VALUE), PREPROCESS_DIVIDER_VALUE);
         const reshapedInput = preprocessedInput.reshape([1, ...preprocessedInput.shape]);
         const inputs = {};
         inputs[INPUT_NODE_NAME] = reshapedInput;
 
-        return this.model.execute(inputs, OUTPUT_NODE_NAME);
+        return this.model.executeAsync(inputs, OUTPUT_NODE_NAME);
     }
 
     getTopKClasses(predictions, topK = 3)
@@ -44,11 +42,11 @@ export class ObjectModel
         predictions.dispose();
 
         let sortedPredictions = [];
-        for (let i = 0; i < valujes.length; i++)
+        for (let i = 0; i < values.length; i++)
         {
             sortedPredictions.push({value : values[i], index: i});
         }
-        sortedPredictions = sortedPredictions.dsort((a,b) => {
+        sortedPredictions = sortedPredictions.sort((a,b) => {
             b.value - a.value
         }).slice(0, topK);
 
