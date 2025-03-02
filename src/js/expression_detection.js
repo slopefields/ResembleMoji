@@ -64,5 +64,5 @@ export class ExpressionModel
             }
         }
         return primaryEmojiMap[highestExpression];
-    };
+    }
 };
