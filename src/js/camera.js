@@ -16,10 +16,6 @@ export class Camera
         // Check if webcam access is supported
         if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
         {
-            // Allow enable webcam button to be clicked if supported
-            enableWebcamButton.addEventListener('click', this.enableWebcam);
-            // Allow capture from webcam button to be clicked if supported
-            captureButton.addEventListener('click', this.captureFromWebcam);
             return true;
         }
         else
@@ -55,25 +51,6 @@ export class Camera
         } catch (error) {
             console.error("Error accessing webcam: ", error);
         }
-        /* Old
-        if (!this.videoElement) {
-            console.error("Error: videoElement is not defined.");
-            return;
-        }
-
-        this.videoElement.classList.remove("hidden");
-        imageDisplay.classList.add("hidden");
-
-        try
-        {
-            const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'user'}});
-            this.videoElement.srcObject = stream;
-        }
-        catch(error)
-        {
-            console.error("Error accessing webcam: ", error);
-        }
-        */
     }
 
     captureFromWebcam()
