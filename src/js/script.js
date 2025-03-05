@@ -19,6 +19,19 @@
         });
     }
 
+    function displayExpressionPredictions(predictions)
+    {
+        for (let emotion in predictions)
+        {
+            if (predictions.hasOwnProperty(emotion))
+            {
+                const temp = document.createElement('p');
+                temp.textContent = `${emotion} : ${(predictions[emotion] * 100).toFixed(2)}%`;
+                expressionsDiv.appendChild(temp);
+            }
+        }
+    }
+
     function clearResults()
     {
         // Reset Object and Expression predictions
@@ -50,4 +63,4 @@
 
     export { imageDisplay, enableWebcamButton, captureButton, 
         predictionsDiv, expressionsDiv, startButton, 
-        displayObjectPredictions, clearResults };
+        displayObjectPredictions, displayExpressionPredictions, clearResults };

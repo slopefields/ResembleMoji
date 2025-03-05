@@ -1,7 +1,7 @@
 import { ExpressionModel } from './expression_detection.js';
 import { ObjectModel } from './object_detection.js';
 import { Camera, VIDEO_PIXELS } from './camera.js';
-import { imageDisplay, displayObjectPredictions, clearResults } from './script.js';
+import { displayExpressionPredictions, displayObjectPredictions, clearResults } from './script.js';
 
 export class Game
 {
@@ -47,6 +47,7 @@ export class Game
                 console.log("Expressions detected!");
                 const expressionEmoji = await this.expressionModel.predictExpression(detectionWithExpressions);
                 console.log(`Predicted emoji: ${expressionEmoji}`);
+                displayExpressionPredictions(detectionWithExpressions.expressions);
             }
             else
             {
