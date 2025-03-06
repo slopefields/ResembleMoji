@@ -1,4 +1,5 @@
     import { Game } from './game.js';
+    import _ from 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/+esm';
 
     const imageDisplay = document.getElementById('image-display');
     const enableWebcamButton = document.getElementById('enable-webcam');
@@ -21,15 +22,17 @@
 
     function displayExpressionPredictions(predictions)
     {
+        let temp;
         for (let emotion in predictions)
         {
             if (predictions.hasOwnProperty(emotion))
             {
-                const temp = document.createElement('p');
+                temp = document.createElement('p');
                 temp.textContent = `${emotion} : ${(predictions[emotion] * 100).toFixed(2)}%`;
                 expressionsDiv.appendChild(temp);
             }
         }
+        temp.textContent = `Emoji: ${game.expressionModel.findExpressionEmoji(predictions)}`
     }
 
     function clearResults()
@@ -39,7 +42,10 @@
         expressionsDiv.innerHTML = "";
     }
 
-    
+    function shuffleArray(array)
+    {
+        array = _.shuffle(array);
+    }
 
     reader.addEventListener("load", () =>
     {
@@ -48,7 +54,7 @@
     });
 
     startButton.addEventListener('click', () => {
-        game.startGame();
+        game.prepareCamera();
     });
 
     document.addEventListener("DOMContentLoaded", async () =>
@@ -63,4 +69,4 @@
 
     export { imageDisplay, enableWebcamButton, captureButton, 
         predictionsDiv, expressionsDiv, startButton, 
-        displayObjectPredictions, displayExpressionPredictions, clearResults };
+        displayObjectPredictions, displayExpressionPredictions, clearResults, shuffleArray };
