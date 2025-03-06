@@ -1,3 +1,10 @@
+/* 
+Modified version of mobilenet.ts from github.com/google/emoji-scavenger-hunt/blob/main/src/js/mobilenet.ts
+Notable modifications:
+- Convert ts to js
+- Remove unused JA Language
+*/
+
 import { SCAVENGER_CLASSES } from './scavenger_classes.js';
 
 const MODEL_FILE_URL = '/models/scavenger/tensorflowjs_model.pb';

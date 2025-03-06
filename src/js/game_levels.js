@@ -1,3 +1,10 @@
+/* 
+Modified version of game_levels.ts from github.com/google/emoji-scavenger-hunt/blob/main/src/js/game_levels.ts
+Notable modifications: 
+- Convert ts to js
+- Remove unused JA Language
+*/
+
 export const EMOJIS_LVL_1 = [
     {
       'name': 'hand',
