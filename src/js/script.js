@@ -44,7 +44,7 @@
 
     function shuffleArray(array)
     {
-        array = _.shuffle(array);
+        return _.shuffle(array);
     }
 
     reader.addEventListener("load", () =>
