@@ -16,11 +16,12 @@ export class Camera
         // Check if webcam access is supported
         if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
         {
+            console.log("Webcam support valid");
             return true;
         }
         else
         {
-            alert('getUserMedia() not supported by browser');
+            console.error('getUserMedia() not supported by browser');
             return false;
         }
     }
