@@ -18,6 +18,12 @@ export class ExpressionModel
         }
     }
 
+    async attemptDetection(image)
+    {
+        const detectionWithExpressions = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceExpressions();
+        return detectionWithExpressions;
+    }
+
     async predictExpression(detectionWithExpressions)
     {
         const expressions = detectionWithExpressions.expressions;
