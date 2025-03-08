@@ -1,8 +1,12 @@
 import { ExpressionModel } from './expression_detection.js';
 import { ObjectModel } from './object_detection.js';
 import { Camera, VIDEO_PIXELS } from './camera.js';
-import { displayExpressionPredictions, displayObjectPredictions, clearResults, shuffleArray } from './script.js';
+import { displayExpressionPredictions, displayObjectPredictions, updateCountdown, updateTimer, clearResults, shuffleArray } from './script.js';
 import { EMOJIS_LVL_1, EMOJIS_LVL_2, EMOJIS_LVL_3, EMOJIS_LVL_4, EMOJIS_LVL_5 } from './game_levels.js';
+import { ui } from './ui.js';
+
+const canvas = document.createElement('canvas');
+const context = canvas.getContext('2d', { willReadFrequently: true});
 
 export class Game
 {
@@ -11,6 +15,11 @@ export class Game
     expressionModel;
     objectModel;
     camera;
+    
+    delay;
+    countdown;
+    timer;
+    timerInterval;
     
     level1;
     level2;
@@ -27,11 +36,18 @@ export class Game
 
     constructor()
     {
-        this.isRunning = true;
+        this.isRunning = false;
         this.cameraPaused = false;
         this.objectModel = new ObjectModel();
         this.expressionModel = new ExpressionModel();
         this.camera = new Camera();
+
+        // 1000 ms for countdown and timer decrement (1 second)
+        this.delay = 1000;
+        // 3 second beginning countdown
+        this.countdown = 3;
+        // 20 second beginning timer
+        this.timer = 20;
 
         this.level1 = shuffleArray(EMOJIS_LVL_1);
         this.level2 = shuffleArray(EMOJIS_LVL_2);
@@ -57,11 +73,28 @@ export class Game
         console.log("CURRENT EMOJI: ", this.currentEmoji);
     }
 
-    async loadModels() {
+    async loadModels() 
+    {
         await this.expressionModel.loadFaceExpressionModel();
         await this.objectModel.load();
     }
 
+    async warmupModels()
+    {
+         // Create a dummy tensor with expected input shape for object detection model
+        const dummyImage = tf.zeros([VIDEO_PIXELS, VIDEO_PIXELS, 3]);
+
+        // Run a single prediction each to load models into memory
+        await Promise.all([
+            this.objectModel.predict(dummyImage),
+            this.expressionModel.attemptDetection(canvas)
+        ]);
+
+        // Dispose of the dummy tensor to free memory
+        dummyImage.dispose();
+
+        console.log("Models warmed up!");
+    }
 
     async makePrediction()
     {
@@ -75,15 +108,13 @@ export class Game
             
             /* Cropping the center of the image, for use in live camera*/
             const videoElement = this.camera.videoElement;
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
+            
             canvas.width = videoElement.videoWidth;
             canvas.height = videoElement.videoHeight;
 
             context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
             
-            const detectionWithExpressions = await faceapi.detectSingleFace(canvas).withFaceLandmarks().withFaceExpressions();
+            const detectionWithExpressions = await this.expressionModel.attemptDetection(canvas);
             if (detectionWithExpressions) 
             {
                 console.log("Expressions detected!");
@@ -115,8 +146,8 @@ export class Game
                 console.log(topK);
                 displayObjectPredictions(topK);
             };
+            console.log(tf.memory());
         };
-        console.log(tf.memory())
         requestAnimationFrame(() => this.makePrediction());
     }
 
@@ -128,7 +159,7 @@ export class Game
             // Wait until the video is actually loaded
             if (this.camera.videoElement.readyState >= 2) {
                 console.log("Video is loaded, starting game...");
-                this.startGame();
+                this.initGame();
             } else {
                 console.error("Error: Video element is not ready.");
             }
@@ -137,9 +168,55 @@ export class Game
         }
     }
 
-    startGame()
+    async handleGameCountdown()
     {
+        while (this.countdown > 0)
+        {
+            console.log("Countdown: ", this.countdown);
+            await new Promise(resolve => setTimeout(resolve, this.delay));
+            this.countdown--;
+            updateCountdown(this.countdown);
+        }
+    }
+
+    handleGameTimer()
+    {
+        if (this.timer > 0) 
+        {
+            this.timer--;
+        }
+        else
+        {
+            /* Stop timer */
+            console.error("Timer reached 0, stopping timer...")
+            clearInterval(this.timerInterval); 
+        }
+        console.log("Timer: ", this.timer);
+        updateTimer(this.timer);
+    }
+
+    async initGame()
+    {
+        /* Display countdown and timer number */
+        updateCountdown(this.countdown);
+        updateTimer(this.timer);
+
+        /* Warmup models */
+        await this.warmupModels();
+
+        /* Start game countdown */
+        await this.handleGameCountdown();
+
+        console.log("Finished countdown! Starting game timer and making predictions...")
+
+        /* Start game timer once countdown finishes */
+        this.isRunning = true;
         this.makePrediction();
+
+        console.log("Timer: ", this.timer);
+        this.timerInterval = window.setInterval(() => {
+            this.handleGameTimer();
+        }, this.delay);
     }
 
     progressLevel()
