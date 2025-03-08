@@ -1,7 +1,7 @@
 import { ExpressionModel } from './expression_detection.js';
 import { ObjectModel } from './object_detection.js';
 import { Camera, VIDEO_PIXELS } from './camera.js';
-import { displayExpressionPredictions, displayObjectPredictions, updateCountdown, updateTimer, clearResults, shuffleArray } from './script.js';
+import { shuffleArray } from './script.js';
 import { EMOJIS_LVL_1, EMOJIS_LVL_2, EMOJIS_LVL_3, EMOJIS_LVL_4, EMOJIS_LVL_5 } from './game_levels.js';
 import { ui } from './ui.js';
 
@@ -98,7 +98,7 @@ export class Game
 
     async makePrediction()
     {
-        clearResults();
+        ui.clearResults();
 
         if (this.isRunning)
         {
@@ -120,7 +120,7 @@ export class Game
                 console.log("Expressions detected!");
                 const expressionEmoji = await this.expressionModel.predictExpression(detectionWithExpressions);
                 console.log(`Predicted emoji: ${expressionEmoji}`);
-                displayExpressionPredictions(detectionWithExpressions.expressions);
+                ui.displayExpressionPredictions(detectionWithExpressions.expressions);
             }
             else
             {
@@ -144,7 +144,7 @@ export class Game
 
                 const topK = this.objectModel.getTopKClasses(results, 10);
                 console.log(topK);
-                displayObjectPredictions(topK);
+                ui.displayObjectPredictions(topK);
             };
             console.log(tf.memory());
         };
@@ -175,7 +175,7 @@ export class Game
             console.log("Countdown: ", this.countdown);
             await new Promise(resolve => setTimeout(resolve, this.delay));
             this.countdown--;
-            updateCountdown(this.countdown);
+            ui.updateCountdown(this.countdown);
         }
     }
 
@@ -192,14 +192,14 @@ export class Game
             clearInterval(this.timerInterval); 
         }
         console.log("Timer: ", this.timer);
-        updateTimer(this.timer);
+        ui.updateTimer(this.timer);
     }
 
     async initGame()
     {
         /* Display countdown and timer number */
-        updateCountdown(this.countdown);
-        updateTimer(this.timer);
+        ui.updateCountdown(this.countdown);
+        ui.updateTimer(this.timer);
 
         /* Warmup models */
         await this.warmupModels();
