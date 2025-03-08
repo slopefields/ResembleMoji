@@ -43,19 +43,19 @@ export class ObjectModel
 
     predict(inputTensor)
     {
-        console.log("Input tensor received: ", inputTensor);
+        //console.log("Input tensor received: ", inputTensor);
 
         const preprocessedInput = tf.div(tf.sub(inputTensor.asType('float32'), PREPROCESS_DIVIDER_VALUE), PREPROCESS_DIVIDER_VALUE);
-        console.log("Preprocessed input: ", preprocessedInput);
+        //console.log("Preprocessed input: ", preprocessedInput);
 
         const reshapedInput = preprocessedInput.reshape([1, ...preprocessedInput.shape]);
-        console.log("Reshaped input: ", reshapedInput);
+        //console.log("Reshaped input: ", reshapedInput);
 
         const inputs = {};
         inputs[INPUT_NODE_NAME] = reshapedInput;
 
         const output = this.model.execute(inputs, OUTPUT_NODE_NAME);
-        console.log("Model output: ", this.model.execute(inputs, OUTPUT_NODE_NAME));
+        //console.log("Model output: ", this.model.execute(inputs, OUTPUT_NODE_NAME));
 
         return output;
     }
