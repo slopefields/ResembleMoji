@@ -1,4 +1,4 @@
-import { enableWebcamButton, captureButton, imageDisplay } from "./script.js";
+import { imageDisplay } from "./script.js";
 
 export const VIDEO_PIXELS = 224;
 
@@ -33,10 +33,7 @@ export class Camera
             console.error("Error: videoElement is not defined.");
             return;
         }
-    
-        this.videoElement.classList.remove("hidden");
-        imageDisplay.classList.add("hidden");
-    
+        
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
             this.videoElement.srcObject = stream;

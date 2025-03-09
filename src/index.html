@@ -11,25 +11,27 @@
 <body>
     <!-- Header -->
     <h1 id="app-title">ResembleMoji</h1>
-    <div id="main-container">
 
+    <!-- Main Container for UI -->
+    <div id="main-container">
         <!-- Main Content Box -->
         <div id="main-box">
-            <video id="webcam" autoplay playsinline class="hidden"></video>
-            <img id="image-display" class="hidden">
+            <video id="webcam" autoplay playsinline></video>
+            <img id="image-display">
         </div>
 
         <!-- Start Game button -->
-        <button id="start-button">Start Game</button>
-
+        <div id="game-controls">
+            <button id="start-button" class="btn">Start Game</button>
+        </div>
     </div>
 
     <!-- Predictions -->
-    <div id="object-predictions"></div>
-    <div id="expression-predictions"></div>
+    <div id="object-predictions" class="prediction-box"></div>
+    <div id="expression-predictions" class="prediction-box"></div>
 
     <!-- Countdown and Timer -->
-    <div>
+    <div id="countdown-timer">
         <h2>Countdown: <span id="countdown"></span></h2>
         <h3>Timer: <span id="timer"></span></h3>
     </div>
@@ -38,7 +40,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1/dist/face-api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
-
     <script src="./js/script.js" type="module"></script>
 </body>
 
