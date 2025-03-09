@@ -121,10 +121,11 @@ export class Game
                 const expressionEmoji = await this.expressionModel.predictExpression(detectionWithExpressions);
                 console.log(`Predicted emoji: ${expressionEmoji}`);
                 ui.displayExpressionPredictions(detectionWithExpressions.expressions);
+                this.checkExpressionMatch(detectionWithExpressions.expressions);
             }
             else
             {
-                // Prevent memory leak
+                /* Prevent memory leak with tidy */
                 const results = tf.tidy(() => {
                     const pixels = tf.browser.fromPixels(canvas);
 
@@ -142,13 +143,44 @@ export class Game
                     return predictions;
                 })
 
-                const topK = this.objectModel.getTopKClasses(results, 10);
+                /* Get top two results */
+                const topK = this.objectModel.getTopKClasses(results, 2);
                 console.log(topK);
                 ui.displayObjectPredictions(topK);
+                this.checkObjectMatch(topK[0].label, topK[1].label);
             };
             console.log(tf.memory());
+            requestAnimationFrame(() => this.makePrediction());
         };
-        requestAnimationFrame(() => this.makePrediction());
+    }
+
+    checkExpressionMatch(expressions)
+    {
+        if (this.currentEmoji.name === expressions.name)
+        {
+            console.log("Expression matched!");
+        }
+    }
+
+    checkObjectMatch(prediction1, prediction2)
+    {
+        if (this.currentEmoji.name === prediction1 || this.currentEmoji.name === prediction2)
+        {
+            this.emojiFound();
+        }
+    }
+
+    emojiFound()
+    {
+        this.pauseGame();
+        console.log("Match found, with timer of ", this.timer);
+        this.progressLevel();
+    }
+
+    pauseGame()
+    {
+        this.isRunning = false;
+        clearInterval(this.timerInterval);
     }
 
     async prepareCamera()
@@ -209,10 +241,14 @@ export class Game
 
         console.log("Finished countdown! Starting game timer and making predictions...")
 
-        /* Start game timer once countdown finishes */
+        /* Start game once countdown finishes */
+        await this.startGame();
+    }
+
+    async startGame()
+    {
         this.isRunning = true;
         this.makePrediction();
-
         console.log("Timer: ", this.timer);
         this.timerInterval = window.setInterval(() => {
             this.handleGameTimer();
@@ -224,6 +260,6 @@ export class Game
         this.currentLevelIndex++;
         this.currentDifficulty = this.gameDifficulty[this.currentLevelIndex];
         this.currentEmoji = this.levelLookup[this.currentDifficulty].shift();
-        console.log("Current emoji: ", this.currentEmoji);
+        console.log("Current emoji, now that level is done: ", this.currentEmoji);
     }
 }
