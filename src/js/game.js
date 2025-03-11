@@ -229,6 +229,7 @@ export class Game
 
     async initGame()
     {
+        ui.showGameScreen();
         /* Display countdown and timer number */
         ui.updateCountdown(this.countdown);
         ui.updateTimer(this.timer);

@@ -9,32 +9,40 @@
 </head>
 
 <body>
-    <!-- Header -->
-    <h1 id="app-title">ResembleMoji</h1>
 
-    <!-- Main Container for UI -->
-    <div id="main-container">
-        <!-- Main Content Box -->
-        <div id="main-box">
-            <video id="webcam" autoplay playsinline></video>
-            <img id="image-display">
-        </div>
+    <!-- Main screen -->
+    <div id="main-container" class="screen active">
+        <!-- Title/header -->
+        <h1 id="header">ResembleMoji</h1>
 
         <!-- Start Game button -->
         <div id="game-controls">
             <button id="start-button" class="btn">Start Game</button>
         </div>
     </div>
+    <!-- Main screen end -->
 
-    <!-- Predictions -->
-    <div id="object-predictions" class="prediction-box"></div>
-    <div id="expression-predictions" class="prediction-box"></div>
 
-    <!-- Countdown and Timer -->
-    <div id="countdown-timer">
-        <h2>Countdown: <span id="countdown"></span></h2>
-        <h3>Timer: <span id="timer"></span></h3>
+
+    <!-- Game screen -->
+    <div id="game-container" class="screen">
+
+        <!-- Predictions -->
+        <div id="object-predictions" class="prediction-box"></div>
+        <div id="expression-predictions" class="prediction-box"></div>
+
+        <!-- Countdown and Timer -->
+        <div id="countdown-timer">
+            <h2>Countdown: <span id="countdown"></span></h2>
+            <h3>Timer: <span id="timer"></span></h3>
+        </div>
+
+        <!-- Camera display -->
+        <video id="webcam" autoplay playsinline></video>
+        <img id="image-display">
+
     </div>
+    <!-- Game screen end -->
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.3"></script>

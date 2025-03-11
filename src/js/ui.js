@@ -2,6 +2,11 @@ import { game } from './script.js';
 
 class UiClass
 {
+    /* Screens */
+    allScreens;
+    mainScreen;
+    gameScreen;
+
     statusElement;
     countdownElement;
     timerElement;
@@ -10,11 +15,32 @@ class UiClass
 
     constructor()
     {
+        this.allScreens = document.querySelectorAll('.screen');
+        this.mainScreen = document.getElementById('main-container');
+        this.gameScreen = document.getElementById('game-container');
+
         this.statusElement = document.getElementById('status');
         this.countdownElement = document.getElementById('countdown');
         this.timerElement = document.getElementById('timer');
         this.predictionsDiv = document.getElementById('object-predictions');
         this.expressionsDiv = document.getElementById('expression-predictions');
+    }
+
+    showMainScreen()
+    {
+        this.allScreens.forEach(screen => {
+            screen.classList.remove("active")
+        })
+        this.mainScreen.classList.add("active");
+    }
+
+    showGameScreen()
+    {
+        this.allScreens.forEach(screen => {
+            console.log("removed active for", screen);
+            screen.classList.remove("active");
+        })
+        this.gameScreen.classList.add("active");
     }
 
     displayObjectPredictions(predictions)
